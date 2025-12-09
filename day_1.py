@@ -101,18 +101,18 @@ Using password method 0x434C49434B, what is the password to open the door?
 def rotate_from_string_count_wraps(s, number=0, max=100):
     lr = -1 if s[0] == "L" else 1
     n = int(s[1:])
+
+    full_number = (number + n)
+    wraps = full_number // max
     new_number = (number + n * lr)
-    wraps = n // max
-    new_number_wraps = abs(new_number) // max
+    new_number_wrapped = new_number % max
 
-    print(n, number, new_number, wraps, new_number_wraps)
-
-    if(number != 0):
-        if(new_number >= max or new_number <= 0):
+    if(full_number < max):
+        if(new_number_wrapped == 0):
             wraps += 1
-    print(n, number, new_number, wraps, new_number_wraps)
-    number = new_number % max
 
+
+    number = new_number_wrapped
 
     return number, wraps
 
@@ -127,6 +127,48 @@ def rotate_from_list_and_count_zero_wraps(s_list, number=0):
         num_zeros += wraps
 
     return num_zeros
+
+
+
+def test_count_wraps():
+
+    n1, w1 = rotate_from_string_count_wraps("L300", 0)
+    assert w1 == 3
+    n2, w2 = rotate_from_string_count_wraps("L300", 1)
+    assert w2 == 3
+    n3, w3 = rotate_from_string_count_wraps("L350", 50)
+    assert w3 == 4 and n3 == 0, f"{w3}, {n3}"
+
+    n4, w4 = rotate_from_string_count_wraps("R350", 50)
+    assert w4 == 4 and n4 == 0
+
+    n5, w5 = rotate_from_string_count_wraps("R351", 50)
+    assert w5 == 4 and n5 == 1
+
+    n6, w6 = rotate_from_string_count_wraps("L351", 50)
+    assert w6 == 4 and n6 == 99
+
+
+    expected_w = [10,20,21,21,22,22,23,24,24]
+    expected_n = [50,50,0,1,0,99,0,0,1]
+    test_list =["R1000","L1000","L50"  ,"R1"   ,"L1"   ,"L1"   ,"R1"   ,"R100" ,"R1"]
+    n = 50
+    w = 0
+
+    for e_w, e_n, s in zip(expected_w, expected_n, test_list):
+        n, w_n = rotate_from_string_count_wraps(s, n)
+        print(n, w_n)
+        w += w_n
+        assert  n == e_n and w == e_w, f"{n}=={e_n}, {w}=={e_w}"
+
+
+    n = 50
+    w = 0
+    for s in ["L50", "R101"]:
+        n, w_n = rotate_from_string_count_wraps(s, n)
+        w += w_n
+    assert w == 2 and n == 1
+
 
 def main():
     test_s_list="""
@@ -4686,8 +4728,10 @@ L22
 L34
 R36"""
 
+    test_count_wraps()
+
     #print(rotate_from_list_and_count_zeros(s_list, number=50))
-    #print(rotate_from_list_and_count_zero_wraps(test_s_list, number=50))
+    print(rotate_from_list_and_count_zero_wraps(test_s_list, number=50))
     print(rotate_from_list_and_count_zero_wraps(s_list, number=50))
 
 if __name__ == '__main__':
