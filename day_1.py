@@ -102,14 +102,25 @@ def rotate_from_string_count_wraps(s, number=0, max=100):
     lr = -1 if s[0] == "L" else 1
     n = int(s[1:])
 
-    full_number = (number + n)
-    wraps = full_number // max
     new_number = (number + n * lr)
+    wraps = 0
+    if(new_number < 0):
+        wraps = abs(new_number) // max
+        if(number != 0):
+            wraps += 1
+    elif(new_number >= max):
+        wraps = new_number // max
+    elif(new_number % max == 0):
+        wraps += 1
+
+    #full_number = (number + n)
+    #wraps = full_number // max
+    #new_number = (number + n * lr)
     new_number_wrapped = new_number % max
 
-    if(full_number < max):
-        if(new_number_wrapped == 0):
-            wraps += 1
+    #if(full_number < max):
+    #    if(new_number_wrapped == 0):
+    #        wraps += 1
 
 
     number = new_number_wrapped
@@ -133,9 +144,9 @@ def rotate_from_list_and_count_zero_wraps(s_list, number=0):
 def test_count_wraps():
 
     n1, w1 = rotate_from_string_count_wraps("L300", 0)
-    assert w1 == 3
+    assert w1 == 3, f"{w1}, {n1}"
     n2, w2 = rotate_from_string_count_wraps("L300", 1)
-    assert w2 == 3
+    assert w2 == 3, f"{w2}, {n2}"
     n3, w3 = rotate_from_string_count_wraps("L350", 50)
     assert w3 == 4 and n3 == 0, f"{w3}, {n3}"
 
