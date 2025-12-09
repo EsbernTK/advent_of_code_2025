@@ -62,13 +62,85 @@ def rotate_from_list_and_count_zeros(s_list, number=0):
             break
 
         number = rotate_from_string(s, number)
-        print(number)
+        #print(number)
         if(number == 0):
             num_zeros += 1
 
     return num_zeros
 
+"""
+--- Part Two ---
+You're sure that's the right password, but the door won't open. You knock, but nobody answers. You build a snowman while you think.
+
+As you're rolling the snowballs for your snowman, you find another security document that must have fallen into the snow:
+
+"Due to newer security protocols, please use password method 0x434C49434B until further notice."
+
+You remember from the training seminar that "method 0x434C49434B" means you're actually supposed to count the number of times any click causes the dial to point at 0, regardless of whether it happens during a rotation or at the end of one.
+
+Following the same rotations as in the above example, the dial points at zero a few extra times during its rotations:
+
+The dial starts by pointing at 50.
+The dial is rotated L68 to point at 82; during this rotation, it points at 0 once.
+The dial is rotated L30 to point at 52.
+The dial is rotated R48 to point at 0.
+The dial is rotated L5 to point at 95.
+The dial is rotated R60 to point at 55; during this rotation, it points at 0 once.
+The dial is rotated L55 to point at 0.
+The dial is rotated L1 to point at 99.
+The dial is rotated L99 to point at 0.
+The dial is rotated R14 to point at 14.
+The dial is rotated L82 to point at 32; during this rotation, it points at 0 once.
+In this example, the dial points at 0 three times at the end of a rotation, plus three more times during a rotation. So, in this example, the new password would be 6.
+
+Be careful: if the dial were pointing at 50, a single rotation like R1000 would cause the dial to point at 0 ten times before returning back to 50!
+
+Using password method 0x434C49434B, what is the password to open the door?
+"""
+
+def rotate_from_string_count_wraps(s, number=0, max=100):
+    lr = -1 if s[0] == "L" else 1
+    n = int(s[1:])
+    new_number = (number + n * lr)
+    wraps = n // max
+    new_number_wraps = abs(new_number) // max
+
+    print(n, number, new_number, wraps, new_number_wraps)
+
+    if(number != 0):
+        if(new_number >= max or new_number <= 0):
+            wraps += 1
+    print(n, number, new_number, wraps, new_number_wraps)
+    number = new_number % max
+
+
+    return number, wraps
+
+def rotate_from_list_and_count_zero_wraps(s_list, number=0):
+    l = s_list.strip().split("\n")
+    num_zeros = 0
+    for s in l:
+        if(len(s) < 2):
+            break
+
+        number, wraps = rotate_from_string_count_wraps(s, number)
+        num_zeros += wraps
+
+    return num_zeros
+
 def main():
+    test_s_list="""
+L68
+L30
+R48
+L5
+R60
+L55
+L1
+L99
+R14
+L82"""
+
     s_list = """
 R20
 R10
@@ -4614,7 +4686,9 @@ L22
 L34
 R36"""
 
-    print(rotate_from_list_and_count_zeros(s_list, number=50))
+    #print(rotate_from_list_and_count_zeros(s_list, number=50))
+    #print(rotate_from_list_and_count_zero_wraps(test_s_list, number=50))
+    print(rotate_from_list_and_count_zero_wraps(s_list, number=50))
 
 if __name__ == '__main__':
     main()
