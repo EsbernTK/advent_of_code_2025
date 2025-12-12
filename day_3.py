@@ -153,8 +153,8 @@ def main_2():
 
 
 if __name__ == '__main__':
-    #main_1_test()
-    #main_1()
+    main_1_test()
+    main_1()
 
     main_2_test()
     main_2()
