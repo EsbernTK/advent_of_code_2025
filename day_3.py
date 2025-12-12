@@ -76,6 +76,85 @@ def main_1():
     print(joltages)
     print(s)
 
+
+"""
+--- Part Two ---
+The escalator doesn't move. The Elf explains that it probably needs more joltage to overcome the static friction of the system and hits the big red "joltage limit safety override" button. You lose count of the number of times she needs to confirm "yes, I'm sure" and decorate the lobby a bit while you wait.
+
+Now, you need to make the largest joltage by turning on exactly twelve batteries within each bank.
+
+The joltage output for the bank is still the number formed by the digits of the batteries you've turned on; the only difference is that now there will be 12 digits in each bank's joltage output instead of two.
+
+Consider again the example from before:
+
+987654321111111
+811111111111119
+234234234234278
+818181911112111
+Now, the joltages are much larger:
+
+In 987654321111111, the largest joltage can be found by turning on everything except some 1s at the end to produce 987654321111.
+In the digit sequence 811111111111119, the largest joltage can be found by turning on everything except some 1s, producing 811111111119.
+In 234234234234278, the largest joltage can be found by turning on everything except a 2 battery, a 3 battery, and another 2 battery near the start to produce 434234234278.
+In 818181911112111, the joltage 888911112111 is produced by turning on everything except some 1s near the front.
+The total output joltage is now much larger: 987654321111 + 811111111119 + 434234234278 + 888911112111 = 3121910778619.
+"""
+
+def find_highest_joltage_N_naive_recursive(battery_int_list, N=11):
+    if(N == 0):
+        return max(battery_int_list)
+    list_max = max(battery_int_list[:-N])
+    max_inds = [i for i in range(len(battery_int_list)-N) if battery_int_list[i] == list_max]
+
+    max_h_jolt = -1
+    for i in max_inds:
+        h_jolt = find_highest_joltage_N_naive_recursive(battery_int_list[i+1:], N-1)
+        if(h_jolt > max_h_jolt):
+            max_h_jolt = h_jolt
+    if(max_h_jolt == -1):
+        print("")
+    return int(f"{list_max}{max_h_jolt}")
+
+
+def find_highest_joltage_N_sum(full_battery_list):
+    joltages = []
+    for battery_line in full_battery_list:
+        battery_int_list = [int(i) for i in battery_line]
+        joltages.append(find_highest_joltage_N_naive_recursive(battery_int_list))
+
+    return joltages, sum(joltages)
+
+
+def main_2_test():
+    test_data = """
+987654321111111
+811111111111119
+234234234234278
+818181911112111
+"""
+    expected_joltages = [987654321111, 811111111119, 434234234278, 888911112111]
+    expected_sum = 3121910778619
+    test_data_list = test_data.strip().split("\n")
+
+    joltages, s = find_highest_joltage_N_sum(test_data_list)
+
+    assert len(set(expected_joltages).difference(set(joltages))) == 0
+    assert s == expected_sum
+
+
+def main_2():
+    with open("day_3.txt", "r") as f:
+        data = f.read().strip().split("\n")
+
+    joltages, s = find_highest_joltage_N_sum(data)
+
+    print(joltages)
+    print(s)
+
+
 if __name__ == '__main__':
-    main_1_test()
-    main_1()
+    #main_1_test()
+    #main_1()
+
+    main_2_test()
+    main_2()
