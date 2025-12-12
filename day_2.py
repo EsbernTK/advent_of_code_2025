@@ -40,15 +40,27 @@ What do you get if you add up all of the invalid IDs?
 def find_duplicates_for_n(n_str:str, min, max):
     n_len = len(n_str)
     out = [0]
-    if(n_len % 2 == 1):
-        return out
-    half_n = int(n_str[:n_len//2])
+    #if(n_len % 2 == 1):
+    #    return out
 
-    n1 = int(n_str[:n_len//2] * 2)
-    while min <= n1 <= max:
-        out.append(n1)
+    half_len = n_len//2 if n_len > 1 else 1
+    half_n = int(n_str[:half_len])
+
+    n1 = int(str(half_n) * 2)
+    while min <= n1:
+        if n1 <= max:
+            out.append(n1)
         half_n -= 1
         n1 = int(str(half_n) * 2)
+
+    half_n = int(n_str[:half_len])
+    n2 = int(str(half_n) * 2)
+    while n2 <= max:
+        if min <= n2 and n2 not in out:
+            out.append(n2)
+        half_n += 1
+        n2 = int(str(half_n) * 2)
+
     return out
 
 def find_duplicates_in_range(low:str, high:str):
@@ -58,12 +70,12 @@ def find_duplicates_in_range(low:str, high:str):
     high_int = int(high)
 
     low_ns = find_duplicates_for_n(low, low_int, high_int)
-    high_ns = find_duplicates_for_n(high, low_int, high_int)
-    high_ns = [n if n not in low_ns else 0 for n in high_ns]
+    #high_ns = find_duplicates_for_n(high, low_int, high_int)
+    #high_ns = [n if n not in low_ns else 0 for n in high_ns]
 
 
-    out = low_ns + high_ns
-    return out
+    #out = low_ns + high_ns
+    return low_ns
 
 def find_duplicates_sum(data_list):
     all_dupes = []
@@ -94,7 +106,7 @@ if __name__ == '__main__':
     range_dupes = [[r, d] for r, d in zip(data, dupes)]
 
     print(dupes)
-    print(s)
+    print(s) #19386344315
 
 
 
