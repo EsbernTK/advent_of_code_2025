@@ -39,14 +39,17 @@ What do you get if you add up all of the invalid IDs?
 
 def find_duplicates_for_n(n_str:str, min, max):
     n_len = len(n_str)
+    out = [0]
     if(n_len % 2 == 1):
-        return [0]
-    n1 = int(n_str[:n_len//2] * 2)
-    n2 = int(n_str[n_len // 2:] * 2)
+        return out
+    half_n = int(n_str[:n_len//2])
 
-    n1 = n1 if min <= n1 <= max else 0
-    n2 = n2 if min <= n2 <= max and n2 != n1 else 0
-    return [n1, n2]
+    n1 = int(n_str[:n_len//2] * 2)
+    while min <= n1 <= max:
+        out.append(n1)
+        half_n -= 1
+        n1 = int(str(half_n) * 2)
+    return out
 
 def find_duplicates_in_range(low:str, high:str):
     if(len(high) - len(low) > 1):
